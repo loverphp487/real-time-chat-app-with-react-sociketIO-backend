@@ -1,4 +1,4 @@
-import { HttpConfig, HTTPConfigType } from '@/config';
+import { HttpConfig, HTTPConfigType } from '../config';
 
 export class AppError extends Error {
 	public statusCode: HTTPConfigType;

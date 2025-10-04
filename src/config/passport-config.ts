@@ -5,10 +5,11 @@ import { verifyUserService } from '../services/auth.service';
 passport.use(
 	new LocalStrategy(
 		{ usernameField: 'email', passwordField: 'password', session: true },
-		async function (username, password, done) {
+		async function (email, password, done) {
 			try {
-				const user = await verifyUserService({ email: username, password });
-				return done(null, user);
+				const user = await verifyUserService({ email, password });
+
+				return done(null, { email, password });
 			} catch (error: any) {
 				return done(error, false, error?.message);
 			}

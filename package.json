@@ -2,9 +2,9 @@
 	"name": "backend",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
+	"main": "dist/index.js",
 	"scripts": {
-		"dev": "dotenv -- tsc-watch --onsuccess \"node dist/index.js\"",
+		"dev": "concurrently \"tsc -w\" \"nodemon dist/index.js\" ",
 		"build": "npm install && tsc",
 		"start": "node dist/index.js"
 	},
@@ -43,20 +43,17 @@
 		"@types/express": "^5.0.1",
 		"@types/express-session": "^1.18.1",
 		"@types/jsonwebtoken": "^9.0.9",
+		"@types/module-alias": "^2.0.4",
 		"@types/mongoose": "^5.11.96",
 		"@types/node": "^22.15.3",
-		"@types/module-alias": "^2.0.4",
-		"dotenv-cli": "^10.0.0",
-		"ts-node": "^10.9.2",
-		"tsc-watch": "^7.1.1",
 		"@types/nodemailer": "^6.4.17",
 		"@types/passport": "^1.0.17",
 		"@types/passport-local": "^1.0.38",
 		"concurrently": "^9.1.2",
+		"dotenv-cli": "^10.0.0",
 		"nodemon": "^3.1.10",
+		"ts-node": "^10.9.2",
+		"tsc-watch": "^7.1.1",
 		"typescript": "^5.8.3"
-	},
-	"_moduleAliases": {
-		"@": "./dist"
 	}
 }

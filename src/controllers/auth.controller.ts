@@ -1,6 +1,6 @@
-import { HttpConfig } from '@/config';
-import { AuthRegistrationService } from '@/services/auth.service';
-import { loginSchema, registerSchema } from '@/validation/auth.validation';
+import { HttpConfig } from '../config';
+import { AuthRegistrationService } from '../services/auth.service';
+import { loginSchema, registerSchema } from '../validation/auth.validation';
 import { NextFunction, Request, Response } from 'express';
 import expressAsyncHandler from 'express-async-handler';
 import passport from 'passport';
@@ -15,30 +15,25 @@ import passport from 'passport';
  */
 export const LoginController = expressAsyncHandler(
 	async (req: Request, res: Response, next: NextFunction): Promise<any> => {
-		try {
-			const body = loginSchema.parse({ ...req.body });
+		const body = loginSchema.parse({ ...req.body });
 
-			passport.authenticate(
-				'local',
-				function async(err: Error | null, user: Express.User) {
+		passport.authenticate(
+			'local',
+			function async(err: Error | null, user: Express.User) {
+				if (err) {
+					return next(err);
+				}
+
+				req.logIn(user, async function async(err) {
 					if (err) {
 						return next(err);
 					}
-
-					req.logIn(user, async function async(err) {
-						if (err) {
-							return next(err);
-						}
-
-						res
-							.status(HttpConfig.OK)
-							.json({ message: 'Logged in successfully' });
-					});
-				},
-			)(req, res, next);
-		} catch (error) {
-			next(error);
-		}
+					res
+						.status(HttpConfig.OK)
+						.json({ message: 'Logged in successfully', user });
+				});
+			},
+		)(req, res, next);
 	},
 );
 

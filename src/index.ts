@@ -1,23 +1,25 @@
-import 'module-alias/register';
-
 import express, { type Express } from 'express';
 
-import CONFIG from '@/config';
-import { ConnectionToDatabase } from '@/db';
-import { isAuthenticated, notFound, RequestHandlerError } from '@/middlewares';
-import authRouter from '@/routes/auth.route';
-import connectMongo from 'connect-mongodb-session';
 import cookieParser from 'cookie-parser';
-import cors from 'cors';
-import mongoSanitize from 'express-mongo-sanitize';
+import dotenv from 'dotenv';
 import session from 'express-session';
+import cors from 'cors';
 import { createServer, type Server } from 'http';
 import passport from 'passport';
+import CONFIG from './config';
+import { ConnectionToDatabase } from './db';
+import { isAuthenticated, notFound, RequestHandlerError } from './middlewares';
+import authRouter from './routes/auth.route';
 
-import '@/config/passport-config';
-import userRoutes from '@/routes/user.route';
+import userRoutes from './routes/user.route';
 
-const MongoDBStore = connectMongo(session);
+dotenv.config();
+
+import './config/passport-config';
+import ConnectMongoDBSession from 'connect-mongodb-session';
+import ExpressMongoSanitize from 'express-mongo-sanitize';
+
+const MongoDBStore = ConnectMongoDBSession(session);
 
 const store = new MongoDBStore({
 	uri: CONFIG.MONGO_URL as string,
@@ -28,9 +30,11 @@ const app: Express = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser(CONFIG.COOKIES_SECRET as string));
+
+app.use(cookieParser(CONFIG.SESSION_SECRET!));
+
 app.use(
-	mongoSanitize({
+	ExpressMongoSanitize({
 		replaceWith: '_',
 		/**
 		 * A function to be called when a NoSQL injection attempt is detected.
@@ -47,14 +51,14 @@ app.use(
 
 app.use(
 	session({
-		secret: CONFIG.SESSION_SECRET as string,
+		secret: CONFIG.COOKIES_SECRET!,
 		cookie: {
-			secure: CONFIG.ENV_NODE === 'production' ? true : false, // Set to true in production with HTTPS
-			sameSite: CONFIG.ENV_NODE === 'production' ? 'none' : 'lax',
+			maxAge: 1000 * 60 * 60 * 24, // 1 week
 			httpOnly: true,
-			maxAge: 24 * 60 * 60 * 1000, // 24 hours
+			sameSite: 'none',
+			secure: true,
 		},
-		store: store,
+		// store: store,
 		// Boilerplate options, see:
 		// * https://www.npmjs.com/package/express-session#resave
 		// * https://www.npmjs.com/package/express-session#saveuninitialized

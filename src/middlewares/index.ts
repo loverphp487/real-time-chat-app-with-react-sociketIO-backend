@@ -1,5 +1,5 @@
-import { HttpConfig } from '@/config';
-import { AppError, UnauthorizedException } from '@/utilis';
+import { HttpConfig } from '../config';
+import { AppError, UnauthorizedException } from '../utilis';
 import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
 import { Error as MongooseError } from 'mongoose';
 import { ZodError } from 'zod';

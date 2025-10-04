@@ -1,10 +1,10 @@
 import * as express from 'express';
-import { UserDocument } from '@/models/user.model';
+import { UserDocument } from '../models/user.model';
 
 declare global {
 	namespace Express {
 		// Inject additional properties on express.Request
-		interface User extends UserDocument {
+		interface User {
 			_id?: any;
 			email?: any;
 			password?: any;
