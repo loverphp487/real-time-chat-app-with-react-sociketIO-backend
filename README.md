@@ -40,10 +40,10 @@ Instructions on how to set up and run the project locally.
     ```bash
     git clone <repository_url>
     cd <repository_name>
-    ```
     npm install
     # or
     yarn install
+    ```
 
 ## Environment Variables.
 
@@ -53,3 +53,9 @@ variables (e.g., PORT, MONGO_URI, JWT_SECRET).
     PORT=3000
     MONGO_URI=mongodb://localhost:27017/mydatabase
     JWT_SECRET=your_jwt_secret_key
+
+## Start the server
+
+    npm start
+    # or if using nodemon for development
+    npm run dev
