@@ -1,5 +1,5 @@
-import { HttpConfig } from '../config';
-import { getUserData } from '../services/user.service';
+import { HttpConfig } from '@/config';
+import { getUserData } from '@/services/user.service';
 import { NextFunction, Request, Response } from 'express';
 import expressAsyncHandler from 'express-async-handler';
 

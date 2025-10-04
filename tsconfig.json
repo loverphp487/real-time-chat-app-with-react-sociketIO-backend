@@ -30,8 +30,10 @@
 		"module": "commonjs" /* Specify what module code is generated. */,
 		"rootDir": "./src" /* Specify the root folder within your source files. */,
 		// "moduleResolution": "node10",                     /* Specify how TypeScript looks up a file from a given module specifier. */
-		// "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
-		// "paths": {},                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
+		//	"baseUrl": "." /* Specify the base directory to resolve non-relative module names. */,
+		"paths": {
+			"@/*": ["./src/*"]
+		} /* Specify a set of entries that re-map imports to additional lookup locations. */,
 		// "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
 		// "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
 		// "types": [],                                      /* Specify type package names to be included without being referenced in a source file. */
@@ -41,7 +43,7 @@
 		// "resolvePackageJsonExports": true,                /* Use the package.json 'exports' field when resolving package imports. */
 		// "resolvePackageJsonImports": true,                /* Use the package.json 'imports' field when resolving imports. */
 		// "customConditions": [],                           /* Conditions to set in addition to the resolver-specific defaults when resolving imports. */
-		// "resolveJsonModule": true,                        /* Enable importing .json files. */
+		"resolveJsonModule": true /* Enable importing .json files. */,
 		// "allowArbitraryExtensions": true,                 /* Enable importing files with any extension, provided a declaration file is present. */
 		// "noResolve": true,                                /* Disallow 'import's, 'require's or '<reference>'s from expanding the number of files TypeScript should add to a project. */
 
@@ -70,7 +72,7 @@
 		// "newLine": "crlf",                                /* Set the newline character for emitting files. */
 		// "stripInternal": true,                            /* Disable emitting declarations that have '@internal' in their JSDoc comments. */
 		// "noEmitHelpers": true,                            /* Disable generating custom helper functions like '__extends' in compiled output. */
-		"noEmitOnError": true /* Disable emitting files if any type checking errors are reported. */,
+		// "noEmitOnError": true,                            /* Disable emitting files if any type checking errors are reported. */
 		// "preserveConstEnums": true,                       /* Disable erasing 'const enum' declarations in generated code. */
 		// "declarationDir": "./",                           /* Specify the output directory for generated declaration files. */
 		// "preserveValueImports": true,                     /* Preserve unused imported values in the JavaScript output that would otherwise be removed. */
@@ -93,10 +95,10 @@
 		// "noImplicitThis": true,                           /* Enable error reporting when 'this' is given the type 'any'. */
 		// "useUnknownInCatchVariables": true,               /* Default catch clause variables as 'unknown' instead of 'any'. */
 		// "alwaysStrict": true,                             /* Ensure 'use strict' is always emitted. */
-		// "noUnusedLocals": true,                           /* Enable error reporting when local variables aren't read. */
-		// "noUnusedParameters": true,                       /* Raise an error when a function parameter isn't read. */
+		//"noUnusedLocals": true /* Enable error reporting when local variables aren't read. */,
+		//"noUnusedParameters": true /* Raise an error when a function parameter isn't read. */,
 		// "exactOptionalPropertyTypes": true,               /* Interpret optional property types as written, rather than adding 'undefined'. */
-		// "noImplicitReturns": true,                        /* Enable error reporting for codepaths that do not explicitly return in a function. */
+		//"noImplicitReturns": true /* Enable error reporting for codepaths that do not explicitly return in a function. */,
 		// "noFallthroughCasesInSwitch": true,               /* Enable error reporting for fallthrough cases in switch statements. */
 		// "noUncheckedIndexedAccess": true,                 /* Add 'undefined' to a type when accessed using an index. */
 		// "noImplicitOverride": true,                       /* Ensure overriding members in derived classes are marked with an override modifier. */
@@ -109,5 +111,11 @@
 		"skipLibCheck": true /* Skip type checking all .d.ts files. */
 	},
 	"include": ["src/**/*.ts", "@types"],
-	"exclude": ["node_modules", "dist"]
+	"exclude": [
+		"node_modules", // would be the default
+		"dist"
+	],
+	"ts-node": {
+		"files": true
+	}
 }

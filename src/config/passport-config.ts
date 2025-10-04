@@ -1,6 +1,6 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { verifyUserService } from '../services/auth.service';
+import { verifyUserService } from '@/services/auth.service';
 
 passport.use(
 	new LocalStrategy(
@@ -9,7 +9,7 @@ passport.use(
 			try {
 				const user = await verifyUserService({ email, password });
 
-				return done(null, { email, password });
+				return done(null, user);
 			} catch (error: any) {
 				return done(error, false, error?.message);
 			}

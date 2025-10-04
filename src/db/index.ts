@@ -1,4 +1,4 @@
-import CONFIG from '../config';
+import CONFIG from '@/config';
 import mongoose from 'mongoose';
 
 /**
@@ -12,7 +12,7 @@ import mongoose from 'mongoose';
  */
 export const ConnectionToDatabase = async (): Promise<void> => {
 	try {
-		const Conn = await mongoose.connect(CONFIG.MONGO_URL as string);
+		const Conn = await mongoose.connect(CONFIG.MONGO_URL!);
 		console.log(`database is connecting successfully ${Conn.connection.host}`);
 	} catch (error: any) {
 		console.log(`database connection error ${error.message}`);

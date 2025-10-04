@@ -1,7 +1,7 @@
 import {
 	CurrentUserController,
 	logOutController,
-} from '../controllers/user.controller';
+} from '@/controllers/user.controller';
 import { Router } from 'express';
 
 const userRoutes = Router();

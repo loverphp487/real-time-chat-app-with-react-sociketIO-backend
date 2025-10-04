@@ -1,10 +1,10 @@
-import UserModel, { UserDocument } from '../models/user.model';
+import UserModel, { UserDocument } from '@/models/user.model';
 import {
 	BadRequestException,
 	NotFoundException,
 	UnauthorizedException,
-} from '../utilis';
-import { loginSchema, registerSchema } from '../validation/auth.validation';
+} from '@/utilis';
+import { loginSchema, registerSchema } from '@/validation/auth.validation';
 import mongoose from 'mongoose';
 import z from 'zod';
 

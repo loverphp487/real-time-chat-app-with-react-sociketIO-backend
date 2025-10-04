@@ -1,5 +1,5 @@
-import UserModel, { UserDocument } from '../models/user.model';
-import { UnauthorizedException } from '../utilis';
+import UserModel, { UserDocument } from '@/models/user.model';
+import { UnauthorizedException } from '@/utilis';
 import mongoose from 'mongoose';
 
 /**

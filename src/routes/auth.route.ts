@@ -1,7 +1,7 @@
 import {
 	LoginController,
 	RegisterController,
-} from '../controllers/auth.controller';
+} from '@/controllers/auth.controller';
 import { Router } from 'express';
 
 const authRouter = Router();

@@ -1,6 +1,6 @@
-import { HttpConfig } from '../config';
-import { AuthRegistrationService } from '../services/auth.service';
-import { loginSchema, registerSchema } from '../validation/auth.validation';
+import { HttpConfig } from '@/config';
+import { AuthRegistrationService } from '@/services/auth.service';
+import { loginSchema, registerSchema } from '@/validation/auth.validation';
 import { NextFunction, Request, Response } from 'express';
 import expressAsyncHandler from 'express-async-handler';
 import passport from 'passport';

@@ -1,21 +1,22 @@
+import 'module-alias/register';
+
 import express, { type Express } from 'express';
+import CONFIG from '@/config';
 
 import cookieParser from 'cookie-parser';
-import dotenv from 'dotenv';
+
 import session from 'express-session';
 import cors from 'cors';
 import { createServer, type Server } from 'http';
 import passport from 'passport';
-import CONFIG from './config';
-import { ConnectionToDatabase } from './db';
-import { isAuthenticated, notFound, RequestHandlerError } from './middlewares';
-import authRouter from './routes/auth.route';
 
-import userRoutes from './routes/user.route';
+import { ConnectionToDatabase } from '@/db';
+import { isAuthenticated, notFound, RequestHandlerError } from '@/middlewares';
+import authRouter from '@/routes/auth.route';
 
-dotenv.config();
+import userRoutes from '@/routes/user.route';
 
-import './config/passport-config';
+import '@/config/passport-config';
 import ConnectMongoDBSession from 'connect-mongodb-session';
 import ExpressMongoSanitize from 'express-mongo-sanitize';
 
@@ -51,14 +52,16 @@ app.use(
 
 app.use(
 	session({
-		secret: CONFIG.COOKIES_SECRET!,
+		secret: CONFIG.SESSION_SECRET as string, // Replace with a strong, randomly generated secret
+		resave: false,
+		saveUninitialized: true,
+		store: store,
 		cookie: {
-			maxAge: 1000 * 60 * 60 * 24, // 1 week
+			secure: CONFIG.ENV_NODE === 'production', // Use secure cookies in production
+			sameSite: CONFIG.ENV_NODE === 'production' ? 'none' : 'lax', // Adjust based on deployment
+			maxAge: 1000 * 60 * 60 * 24, // 24 hours
 			httpOnly: true,
-			sameSite: 'none',
-			secure: 'auto',
 		},
-		store,
 	}),
 );
 
@@ -98,5 +101,5 @@ const httpServer: Server = createServer(app);
 
 httpServer.listen(CONFIG.PORT || 3000, () => {
 	ConnectionToDatabase();
-	console.log('Server is running on port:http://localhost:' + process.env.PORT);
+	console.log('Server is running on port:http://localhost:' + CONFIG.PORT);
 });

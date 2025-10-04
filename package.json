@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "dist/index.js",
 	"scripts": {
-		"dev": "concurrently \"tsc -w\" \"nodemon dist/index.js\" ",
+		"dev": "dotenv -- tsc-watch --onsuccess \"node dist/index.js\"",
 		"build": "npm install && tsc",
 		"start": "node dist/index.js"
 	},
@@ -17,7 +17,6 @@
 		"body-parser": "^2.2.0",
 		"connect-mongodb-session": "^5.0.0",
 		"cookie-parser": "^1.4.7",
-		"cookie-session": "^2.1.0",
 		"cors": "^2.8.5",
 		"crypto": "^1.0.1",
 		"dotenv": "^16.5.0",
@@ -55,5 +54,8 @@
 		"ts-node": "^10.9.2",
 		"tsc-watch": "^7.1.1",
 		"typescript": "^5.8.3"
+	},
+	"_moduleAliases": {
+		"@": "./dist"
 	}
 }

@@ -1,5 +1,5 @@
-import { HttpConfig } from '../config';
-import { AppError, UnauthorizedException } from '../utilis';
+import { HttpConfig } from '@/config';
+import { AppError, UnauthorizedException } from '@/utilis';
 import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
 import { Error as MongooseError } from 'mongoose';
 import { ZodError } from 'zod';
@@ -80,6 +80,14 @@ export const RequestHandlerError: ErrorRequestHandler = (
 	});
 };
 
+/**
+ * A middleware function that checks if a user is authenticated.
+ * If the user is not authenticated, it throws an UnauthorizedException.
+ * If the user is authenticated, it calls the next function in the application's request-response cycle.
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @param {NextFunction} next - The next function in the application's request-response cycle.
+ */
 export const isAuthenticated = (
 	req: Request,
 	res: Response,
