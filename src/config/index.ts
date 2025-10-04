@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
 const CONFIG = {
-	port: process.env.PORT || 3000,
+	PORT: process.env.PORT || 3000,
 	MONGO_URL: process.env.MONGO_URL,
 	ENV_NODE: process.env.ENV_NODE,
 	WHITELIST_ORIGIN: ['*'],
