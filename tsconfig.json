@@ -1,0 +1,41 @@
+{
+	// Visit https://aka.ms/tsconfig to read more about this file
+	"compilerOptions": {
+		// File Layout
+		"rootDir": "./src",
+		"outDir": "./dist",
+
+		// Environment Settings
+		// See also https://aka.ms/tsconfig/module
+		"module": "commonjs",
+		"target": "es2021",
+		"lib": ["ES6"],
+
+		/* Modules */
+		"resolveJsonModule": true,
+		"forceConsistentCasingInFileNames": true,
+		"esModuleInterop": true,
+		"paths": {
+			"@/*": ["./src/*"]
+		},
+
+		/* Source Maps */
+		"sourceMap": true,
+		"noEmitOnError": true,
+
+		/* Type Checking */
+		"strict": true,
+
+		/* Completeness */
+		"skipLibCheck": true
+	},
+	"include": ["src/**/*.ts"],
+	"exclude": [
+		"node_modules", // would be the default
+		"dist",
+		"@types"
+	],
+	"ts-node": {
+		"files": true
+	}
+}
