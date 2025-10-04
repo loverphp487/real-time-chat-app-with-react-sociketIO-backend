@@ -1,4 +1,4 @@
-# Project Title
+# real time chat app with react sociketIO backend
 
 A concise and descriptive title for your Express backend project.
 
