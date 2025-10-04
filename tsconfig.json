@@ -12,7 +12,6 @@
 		"lib": ["ES6"],
 
 		/* Modules */
-		"resolveJsonModule": true,
 		"forceConsistentCasingInFileNames": true,
 		"esModuleInterop": true,
 		"paths": {
