@@ -30,9 +30,8 @@ const app: Express = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.set('trust proxy', 1);
 
-app.use(cookieParser(CONFIG.COOKIES_SECRET!));
+app.use(cookieParser(CONFIG.SESSION_SECRET!));
 
 app.use(
 	ExpressMongoSanitize({
@@ -52,19 +51,14 @@ app.use(
 
 app.use(
 	session({
-		secret: CONFIG.SESSION_SECRET!,
+		secret: CONFIG.COOKIES_SECRET!,
 		cookie: {
-			maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+			maxAge: 1000 * 60 * 60 * 24, // 1 week
 			httpOnly: true,
 			sameSite: 'none',
-			secure: false,
+			secure: 'auto',
 		},
-		store: store,
-		// Boilerplate options, see:
-		// * https://www.npmjs.com/package/express-session#resave
-		// * https://www.npmjs.com/package/express-session#saveuninitialized
-		resave: false,
-		saveUninitialized: true,
+		store,
 	}),
 );
 

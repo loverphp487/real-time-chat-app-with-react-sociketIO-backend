@@ -15,25 +15,29 @@ import passport from 'passport';
  */
 export const LoginController = expressAsyncHandler(
 	async (req: Request, res: Response, next: NextFunction): Promise<any> => {
-		const body = loginSchema.parse({ ...req.body });
+		try {
+			const body = loginSchema.parse({ ...req.body });
 
-		passport.authenticate(
-			'local',
-			function async(err: Error | null, user: Express.User) {
-				if (err) {
-					return next(err);
-				}
-
-				req.logIn(user, async function async(err) {
+			passport.authenticate(
+				'local',
+				function async(err: Error | null, user: Express.User) {
 					if (err) {
 						return next(err);
 					}
-					res
-						.status(HttpConfig.OK)
-						.json({ message: 'Logged in successfully', user });
-				});
-			},
-		)(req, res, next);
+
+					req.logIn(user, async function async(err) {
+						if (err) {
+							return next(err);
+						}
+						res
+							.status(HttpConfig.OK)
+							.json({ message: 'Logged in successfully', user });
+					});
+				},
+			)(req, res, next);
+		} catch (error) {
+			next(error);
+		}
 	},
 );
 
