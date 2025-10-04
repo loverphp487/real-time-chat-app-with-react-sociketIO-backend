@@ -53,7 +53,7 @@ app.use(
 app.use(
 	session({
 		secret: CONFIG.SESSION_SECRET as string, // Replace with a strong, randomly generated secret
-		resave: false,
+		resave: true,
 		saveUninitialized: true,
 		store: store,
 		cookie: {
