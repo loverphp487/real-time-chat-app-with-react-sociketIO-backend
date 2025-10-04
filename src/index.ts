@@ -62,8 +62,8 @@ app.use(
 		// Boilerplate options, see:
 		// * https://www.npmjs.com/package/express-session#resave
 		// * https://www.npmjs.com/package/express-session#saveuninitialized
-		resave: true, // this option specifies whether to save the session to the store on every request
-		saveUninitialized: false, // option specifies whether to save uninitialized sessions
+		resave: false,
+		saveUninitialized: true,
 	}),
 );
 
