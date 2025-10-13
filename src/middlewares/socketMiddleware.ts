@@ -16,25 +16,24 @@ export const checkUserLoginWithSocket = async (socket: Socket, next: any) => {
 	try {
 		const token = socket.handshake.headers.cookie?.split('=')[1];
 
-		if (!token) {
-			throw new UnauthorizedException('Unauthorized. Please log in.');
-		}
-		const tokenValidation = jwt.verify(
-			token,
-			CONFIG.COOKIES_SECRET!,
-		) as JwtPayload;
-		if (!tokenValidation) {
-			throw new UnauthorizedException('token has been Expired. Please log in.');
-		}
+		if (token) {
+			const tokenValidation = jwt.verify(
+				token,
+				CONFIG.COOKIES_SECRET!,
+			) as JwtPayload;
+			// if (!tokenValidation) {
+			// 	throw new UnauthorizedException('token has been Expired. Please log in.');
+			// }
 
-		const user = await UserModel.findById(tokenValidation?._id);
+			const user = await UserModel.findById(tokenValidation?._id);
 
-		if (!user) {
-			throw new BadRequestException('User not found');
+			if (!user) {
+				throw new BadRequestException('User not found');
+			}
+
+			socket.user = user.omitPassword();
+			socket.userId = user._id as string;
 		}
-
-		socket.user = user.omitPassword();
-		socket.userId = user._id as string;
 
 		next();
 	} catch (error) {

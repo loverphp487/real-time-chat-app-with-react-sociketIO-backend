@@ -74,6 +74,8 @@ httpServer.listen(CONFIG.PORT || 3000, () => {
 let userSocketMap: Record<any, string> = {}; // {userId:socketId}
 
 io.on('connection', (socket) => {
+	if (!socket?.user) return;
+
 	console.log(`A user ${socket?.user?.firstName} connected`);
 	const userId = socket?.userId;
 	userSocketMap[userId!] = socket.id;
