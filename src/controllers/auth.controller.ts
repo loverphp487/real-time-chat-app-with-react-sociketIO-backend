@@ -1,5 +1,10 @@
 import { HttpConfig } from '@/config';
-import { AuthRegistrationService } from '@/services/auth.service';
+import { generateToken } from '@/lib';
+import { UserDocument } from '@/models/user.model';
+import {
+	AuthRegistrationService,
+	verifyUserService,
+} from '@/services/auth.service';
 import { loginSchema, registerSchema } from '@/validation/auth.validation';
 import { NextFunction, Request, Response } from 'express';
 import expressAsyncHandler from 'express-async-handler';
@@ -18,24 +23,34 @@ export const LoginController = expressAsyncHandler(
 		try {
 			const body = loginSchema.parse({ ...req.body });
 
-			passport.authenticate(
-				'local',
-				function async(err: Error | null, user: Express.User) {
-					if (err) {
-						return next(err);
-					}
+			const user: Omit<UserDocument, 'password'> | undefined =
+				await verifyUserService(body);
 
-					req.logIn(user, async function async(err) {
-						if (err) {
-							return next(err);
-						}
-						res
-							.status(HttpConfig.OK)
-							.json({ message: 'Logged in successfully', user });
-					});
-				},
-			)(req, res, next);
+			const token = generateToken(user?._id);
+
+			res
+				.status(HttpConfig.OK)
+				.json({ message: 'Logged in successfully', token });
+
+			//	passport.authenticate(
+			// 	'local',
+			// 	function async(err: Error | null, user: Express.User) {
+			// 		if (err) {
+			// 			return next(err);
+			// 		}
+
+			// 		req.logIn(user, async function async(err) {
+			// 			if (err) {
+			// 				return next(err);
+			// 			}
+			// 			res
+			// 				.status(HttpConfig.OK)
+			// 				.json({ message: 'Logged in successfully', user });
+			// 		});
+			// 	},
+			// )(req, res, next);
 		} catch (error) {
+			console.log(error);
 			next(error);
 		}
 	},

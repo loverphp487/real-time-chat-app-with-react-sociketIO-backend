@@ -35,15 +35,7 @@ export const CurrentUserController = expressAsyncHandler(
 export const logOutController = expressAsyncHandler(
 	async (req: Request, res: Response, next: NextFunction): Promise<any> => {
 		try {
-			await req.logout((err) => {
-				if (err) throw err;
-			});
-
-			req.session.destroy((err) => {
-				if (err) throw err;
-			});
-
-			res.clearCookie('connect.sid');
+			res.clearCookie('token');
 
 			res.status(HttpConfig.OK).json({ message: 'Logged out successfully' });
 		} catch (error) {

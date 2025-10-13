@@ -1,6 +1,8 @@
-import { HttpConfig } from '@/config';
-import { AppError, UnauthorizedException } from '@/utilis';
-import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
+import CONFIG, { HttpConfig } from '@/config';
+import UserModel from '@/models/user.model';
+import { AppError, BadRequestException, UnauthorizedException } from '@/utilis';
+import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Error as MongooseError } from 'mongoose';
 import { ZodError } from 'zod';
 
@@ -88,13 +90,35 @@ export const RequestHandlerError: ErrorRequestHandler = (
  * @param {Response} res - The response object.
  * @param {NextFunction} next - The next function in the application's request-response cycle.
  */
-export const isAuthenticated = (
+export const isAuthenticated = async (
 	req: Request,
 	res: Response,
 	next: NextFunction,
 ) => {
-	if (!req.user || !req.user?._id) {
-		throw new UnauthorizedException('Unauthorized. Please log in.');
+	try {
+		const token = req.headers.authorization?.replace('Bearer ', '');
+
+		if (!token) {
+			throw new UnauthorizedException('Unauthorized. Please log in.');
+		}
+		const tokenValidation = jwt.verify(
+			token,
+			CONFIG.COOKIES_SECRET!,
+		) as JwtPayload;
+		if (!tokenValidation) {
+			throw new UnauthorizedException('token has been Expired. Please log in.');
+		}
+
+		const user = await UserModel.findById(tokenValidation?._id);
+
+		if (!user) {
+			throw new BadRequestException('User not found');
+		}
+
+		req.user = user.omitPassword();
+
+		next();
+	} catch (error) {
+		next(error);
 	}
-	next();
 };
