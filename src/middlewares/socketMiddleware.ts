@@ -34,7 +34,8 @@ export const checkUserLoginWithSocket = async (socket: Socket, next: any) => {
 			const user = await UserModel.findById(tokenValidation?._id);
 
 			socket.user = user?.omitPassword();
-			socket.userId = user?._id as string;
+			socket.userId = user?._id;
+			socket.userId = socket.userId.toString();
 		}
 
 		next();

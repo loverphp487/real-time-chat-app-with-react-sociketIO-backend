@@ -1,12 +1,13 @@
 import { HttpConfig } from '@/config';
+import SocketModel from '@/models/socket.model';
 import {
+	AddNewMessageService,
 	GetAllChatConversationService,
 	GetAllChatListService,
 	GetAllContactListService,
 } from '@/services/chat.service';
 import { NextFunction, Request, Response } from 'express';
 import expressAsyncHandler from 'express-async-handler';
-import { getSocketId } from '..';
 
 /**
  * Retrieves a list of all users that are not the current user.
@@ -61,12 +62,14 @@ export const AddNewMessageController = expressAsyncHandler(
 			const { receiverId, message } = req.body;
 			const senderId = req.user?._id;
 
-			// const data = await AddNewMessageService(senderId, receiverId, message);
+			await AddNewMessageService(senderId, receiverId, message);
 
-			const socketReciverId = getSocketId(receiverId);
+			const socketReciver = await SocketModel.findOne({
+				userId: receiverId,
+			});
 
-			if (req.io) {
-				req.io?.to(socketReciverId).emit('newMessage', message);
+			if (socketReciver && req.io) {
+				req.io?.to(socketReciver.socketId).emit('newMessage', { senderId });
 			}
 
 			return res.status(HttpConfig.ACCEPTED).json({});

@@ -7,7 +7,7 @@ declare global {
 	namespace Express {
 		// Inject additional properties on express.Request
 		interface User {
-			_id?: any;
+			_id?: mongoose.Types.ObjectId;
 			firstName?: string;
 		}
 
@@ -21,12 +21,12 @@ declare global {
 
 declare module 'socket.io' {
 	interface User {
-		_id?: any;
+		_id?: mongoose.Types.ObjectId;
 		firstName?: string;
 	}
 	interface Socket {
 		user?: User;
-		userId?: string;
+		userId?: any;
 	}
 }
 

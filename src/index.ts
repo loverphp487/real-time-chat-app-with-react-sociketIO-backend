@@ -18,6 +18,7 @@ import chatRoute from '@/routes/chat.route';
 import socketMiddleware, {
 	checkUserLoginWithSocket,
 } from './middlewares/socketMiddleware';
+import SocketModel from './models/socket.model';
 
 const app: Express = express();
 
@@ -71,24 +72,29 @@ httpServer.listen(CONFIG.PORT || 3000, () => {
 	console.log('Server is running on port:http://localhost:' + CONFIG.PORT);
 });
 
-export let userSocketMap: Record<any, string> = {}; // {userId:socketId}
-
-export const getSocketId = (userId: any) => userSocketMap[userId];
-
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
 	if (socket.user && socket.userId) {
 		console.log(`A user ${socket?.user?.firstName} connected`);
 		socket.emit('connected', `A user ${socket?.user?.firstName} connected`);
 
-		const userId = socket?.userId;
+		await SocketModel.updateOne(
+			{
+				userId: socket.userId,
+			},
+			{
+				$set: {
+					socketId: socket.id,
+					userId: socket.userId,
+				},
+			},
+			{
+				upsert: true,
+			},
+		);
 
-		userSocketMap[userId!] = socket.id;
-
-		socket.on('disconnect', () => {
-			console.log(`A user ${socket?.user?.firstName} connected`);
-			delete userSocketMap[userId!];
-			socket!.user = undefined;
-			socket.userId = undefined;
+		socket.on('disconnect', async () => {
+			console.log(`A user ${socket?.user?.firstName} disconnected`);
+			await SocketModel.deleteOne({ userId: socket.userId });
 		});
 	} else {
 		socket.disconnect();
