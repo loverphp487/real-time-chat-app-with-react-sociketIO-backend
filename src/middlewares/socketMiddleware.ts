@@ -23,7 +23,7 @@ export const socketMiddleware = (io: SocketIOServer) => {
  */
 export const checkUserLoginWithSocket = async (socket: Socket, next: any) => {
 	try {
-		const token = socket.handshake.headers.cookie?.split('=')[1];
+		const token = socket.handshake.auth?.token;
 
 		if (token) {
 			const tokenValidation = jwt.verify(

@@ -64,7 +64,7 @@ app.get('/', (req, res) => {
 
 app.use(notFound);
 app.use(RequestHandlerError);
-io.use(checkUserLoginWithSocket);
+// io.use(checkUserLoginWithSocket);
 
 httpServer.listen(CONFIG.PORT || 3000, () => {
 	ConnectionToDatabase();
@@ -74,19 +74,19 @@ httpServer.listen(CONFIG.PORT || 3000, () => {
 let userSocketMap: Record<any, string> = {}; // {userId:socketId}
 
 io.on('connection', (socket) => {
-	if (socket.user && socket.userId) {
-		console.log(`A user ${socket?.user?.firstName} connected`);
-
-		socket.emit('connected', `A user ${socket?.user?.firstName} connected`);
-
-		const userId = socket?.userId;
-		userSocketMap[userId!] = socket.id;
-
-		socket.on('disconnect', () => {
-			console.log('A user disconnected', socket?.user?.firstName);
-			delete userSocketMap[userId!];
-		});
-	}
+	socket.emit('connected', `A user ${socket?.user?.firstName} connected`);
+	// if (socket.user && socket.userId) {
+	// 	console.log(`A user ${socket?.user?.firstName} connected`);
+	// 	socket.emit('connected', `A user ${socket?.user?.firstName} connected`);
+	// 	const userId = socket?.userId;
+	// 	userSocketMap[userId!] = socket.id;
+	// 	socket.on('disconnect', () => {
+	// 		console.log('A user disconnected', socket?.user?.firstName);
+	// 		delete userSocketMap[userId!];
+	// 	});
+	// } else {
+	// 	socket.disconnect();
+	// }
 });
 
 io.on('error', (error) => {
