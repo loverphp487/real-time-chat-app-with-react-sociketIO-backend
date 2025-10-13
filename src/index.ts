@@ -74,19 +74,19 @@ httpServer.listen(CONFIG.PORT || 3000, () => {
 let userSocketMap: Record<any, string> = {}; // {userId:socketId}
 
 io.on('connection', (socket) => {
-	socket.emit('connected', `A user ${socket?.user?.firstName} connected`);
-	// if (socket.user && socket.userId) {
-	// 	console.log(`A user ${socket?.user?.firstName} connected`);
-	// 	socket.emit('connected', `A user ${socket?.user?.firstName} connected`);
-	// 	const userId = socket?.userId;
-	// 	userSocketMap[userId!] = socket.id;
-	// 	socket.on('disconnect', () => {
-	// 		console.log('A user disconnected', socket?.user?.firstName);
-	// 		delete userSocketMap[userId!];
-	// 	});
-	// } else {
-	// 	socket.disconnect();
-	// }
+	if (socket.user && socket.userId) {
+		console.log(`A user ${socket?.user?.firstName} connected`);
+		socket.emit('connected', `A user ${socket?.user?.firstName} connected`);
+		const userId = socket?.userId;
+		userSocketMap[userId!] = socket.id;
+
+		socket.on('disconnect', () => {
+			console.log('A user disconnected', socket?.user?.firstName);
+			delete userSocketMap[userId!];
+		});
+	} else {
+		socket.disconnect();
+	}
 });
 
 io.on('error', (error) => {
