@@ -1,4 +1,5 @@
 import { HttpConfig } from '@/config';
+import { getSocketId } from '@/lib';
 import {
 	AddNewMessageService,
 	GetAllChatConversationService,
@@ -64,8 +65,10 @@ export const AddNewMessageController = expressAsyncHandler(
 
 			// const data = await AddNewMessageService(senderId, receiverId, message);
 
+			const socketReciverId = getSocketId(receiverId);
+
 			if (req.io) {
-				req.io?.emit('ReceiveMessage', message);
+				req.io?.to(socketReciverId).emit('newMessage', message);
 			}
 
 			return res.status(HttpConfig.ACCEPTED).json({});

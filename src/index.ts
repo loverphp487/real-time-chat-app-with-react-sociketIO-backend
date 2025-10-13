@@ -19,6 +19,8 @@ import socketMiddleware, {
 	checkUserLoginWithSocket,
 } from './middlewares/socketMiddleware';
 
+import { userSocketMap } from '@/lib';
+
 const app: Express = express();
 
 const httpServer: Server = createServer(app);
@@ -71,18 +73,20 @@ httpServer.listen(CONFIG.PORT || 3000, () => {
 	console.log('Server is running on port:http://localhost:' + CONFIG.PORT);
 });
 
-let userSocketMap: Record<any, string> = {}; // {userId:socketId}
-
 io.on('connection', (socket) => {
 	if (socket.user && socket.userId) {
 		console.log(`A user ${socket?.user?.firstName} connected`);
 		socket.emit('connected', `A user ${socket?.user?.firstName} connected`);
+
 		const userId = socket?.userId;
+
 		userSocketMap[userId!] = socket.id;
 
 		socket.on('disconnect', () => {
-			console.log('A user disconnected', socket?.user?.firstName);
+			console.log(`A user ${socket?.user?.firstName} connected`);
 			delete userSocketMap[userId!];
+			socket!.user = undefined;
+			socket.userId = undefined;
 		});
 	} else {
 		socket.disconnect();

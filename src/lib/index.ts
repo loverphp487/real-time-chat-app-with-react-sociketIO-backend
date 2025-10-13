@@ -1,6 +1,10 @@
 import jwt from 'jsonwebtoken';
 import CONFIG from '@/config';
 
+export let userSocketMap: Record<any, string> = {}; // {userId:socketId}
+
+export const getSocketId = (userId: any) => userSocketMap[userId];
+
 /**
  * Generates a JSON Web Token (JWT) that can be used to authenticate the user.
  * The token is signed with the COOKIE_SECRET from the environment variables.
