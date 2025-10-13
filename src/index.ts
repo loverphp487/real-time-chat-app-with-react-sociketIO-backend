@@ -64,7 +64,7 @@ app.get('/', (req, res) => {
 
 app.use(notFound);
 app.use(RequestHandlerError);
-// io.use(checkUserLoginWithSocket);
+io.use(checkUserLoginWithSocket);
 
 httpServer.listen(CONFIG.PORT || 3000, () => {
 	ConnectionToDatabase();
