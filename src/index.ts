@@ -77,6 +77,8 @@ io.on('connection', (socket) => {
 	if (!socket?.user) return;
 
 	console.log(`A user ${socket?.user?.firstName} connected`);
+
+	socket.emit('connected', `A user ${socket?.user?.firstName} connected`);
 	const userId = socket?.userId;
 	userSocketMap[userId!] = socket.id;
 

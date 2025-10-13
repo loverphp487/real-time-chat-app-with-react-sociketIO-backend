@@ -12,6 +12,15 @@ export const socketMiddleware = (io: SocketIOServer) => {
 	};
 };
 
+/**
+ * Checks if a user is logged in with the provided socket.
+ * If the user is logged in, it will assign the user object and the user's id to the socket object.
+ * If the user is not logged in, it will throw an error.
+ * @param {Socket} socket - The socket object.
+ * @param {any} next - The next function in the application's request-response cycle.
+ * @throws {BadRequestException} - If the user is not found.
+ * @throws {UnauthorizedException} - If the user is not logged in.
+ */
 export const checkUserLoginWithSocket = async (socket: Socket, next: any) => {
 	try {
 		const token = socket.handshake.headers.cookie?.split('=')[1];
@@ -21,9 +30,6 @@ export const checkUserLoginWithSocket = async (socket: Socket, next: any) => {
 				token,
 				CONFIG.COOKIES_SECRET!,
 			) as JwtPayload;
-			// if (!tokenValidation) {
-			// 	throw new UnauthorizedException('token has been Expired. Please log in.');
-			// }
 
 			const user = await UserModel.findById(tokenValidation?._id);
 
