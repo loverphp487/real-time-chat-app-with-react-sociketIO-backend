@@ -1,14 +1,12 @@
 import { HttpConfig } from '@/config';
-import { getSocketId } from '@/lib';
 import {
-	AddNewMessageService,
 	GetAllChatConversationService,
 	GetAllChatListService,
 	GetAllContactListService,
 } from '@/services/chat.service';
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import expressAsyncHandler from 'express-async-handler';
-import { Server as SocketIOServer } from 'socket.io';
+import { getSocketId } from '..';
 
 /**
  * Retrieves a list of all users that are not the current user.

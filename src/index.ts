@@ -19,8 +19,6 @@ import socketMiddleware, {
 	checkUserLoginWithSocket,
 } from './middlewares/socketMiddleware';
 
-import { userSocketMap } from '@/lib';
-
 const app: Express = express();
 
 const httpServer: Server = createServer(app);
@@ -72,6 +70,10 @@ httpServer.listen(CONFIG.PORT || 3000, () => {
 	ConnectionToDatabase();
 	console.log('Server is running on port:http://localhost:' + CONFIG.PORT);
 });
+
+export let userSocketMap: Record<any, string> = {}; // {userId:socketId}
+
+export const getSocketId = (userId: any) => userSocketMap[userId];
 
 io.on('connection', (socket) => {
 	if (socket.user && socket.userId) {
