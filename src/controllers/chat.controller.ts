@@ -1,5 +1,6 @@
 import { HttpConfig } from '@/config';
 import SocketModel from '@/models/socket.model';
+import UserModel from '@/models/user.model';
 import {
 	AddNewMessageImageService,
 	AddNewMessageService,
@@ -69,8 +70,12 @@ export const AddNewMessageController = expressAsyncHandler(
 				userId: receiverId,
 			});
 
+			const user = await UserModel.findOne({ _id: senderId });
+
 			if (socketReciver && req.io) {
-				req.io?.to(socketReciver.socketId).emit('newMessage', { senderId });
+				req.io
+					?.to(socketReciver.socketId)
+					.emit('newMessage', { user: user?.omitPassword() });
 			}
 
 			return res.status(HttpConfig.ACCEPTED).json({});
@@ -96,12 +101,16 @@ export const AddNewMessageImageController = expressAsyncHandler(
 
 			await AddNewMessageImageService(senderId, receiverId, image);
 
+			const user = await UserModel.findOne({ _id: receiverId });
+
 			const socketReciver = await SocketModel.findOne({
 				userId: receiverId,
 			});
 
 			if (socketReciver && req.io) {
-				req.io?.to(socketReciver.socketId).emit('newMessage', { senderId });
+				req.io
+					?.to(socketReciver.socketId)
+					.emit('newMessage', { user: user?.omitPassword() });
 			}
 
 			return res.status(HttpConfig.ACCEPTED).json({});
