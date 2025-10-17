@@ -4,7 +4,7 @@ import { Document } from 'mongoose';
 export interface MessageDocument extends Document {
 	senderId: mongoose.Types.ObjectId;
 	receiverId: mongoose.Types.ObjectId;
-	message: string;
+	message?: string;
 	image?: string;
 }
 
@@ -22,7 +22,6 @@ const messageSchema = new Schema<MessageDocument>(
 		},
 		message: {
 			type: String,
-			required: true,
 		},
 		image: {
 			type: String,

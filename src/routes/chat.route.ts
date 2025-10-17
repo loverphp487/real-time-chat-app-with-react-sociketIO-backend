@@ -1,5 +1,6 @@
 import {
 	AddNewMessageController,
+	AddNewMessageImageController,
 	AllChatConversationController,
 	AllChatListController,
 	AllContactListController,
@@ -12,5 +13,6 @@ chatRoute.get('/all-chat-list', AllChatListController);
 chatRoute.get('/all-contact-list', AllContactListController);
 chatRoute.get('/all-conversations/:receiverId', AllChatConversationController);
 chatRoute.post('/new-message', AddNewMessageController);
+chatRoute.post('/new-message-image', AddNewMessageImageController);
 
 export default chatRoute;

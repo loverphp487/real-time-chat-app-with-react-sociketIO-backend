@@ -1,6 +1,7 @@
 import { HttpConfig } from '@/config';
 import SocketModel from '@/models/socket.model';
 import {
+	AddNewMessageImageService,
 	AddNewMessageService,
 	GetAllChatConversationService,
 	GetAllChatListService,
@@ -63,6 +64,37 @@ export const AddNewMessageController = expressAsyncHandler(
 			const senderId = req.user?._id;
 
 			await AddNewMessageService(senderId, receiverId, message);
+
+			const socketReciver = await SocketModel.findOne({
+				userId: receiverId,
+			});
+
+			if (socketReciver && req.io) {
+				req.io?.to(socketReciver.socketId).emit('newMessage', { senderId });
+			}
+
+			return res.status(HttpConfig.ACCEPTED).json({});
+		} catch (error) {
+			next(error);
+		}
+	},
+);
+
+/**
+ * Handles a request to add a new message with an image.
+ * It takes the request and response objects, and the next function in the application's request-response cycle.
+ * It retrieves the user's data from the request body and calls the AddNewMessageImageService function to add a new message.
+ * If the message is added successfully, it returns a promise that resolves with a response with a status code of 202 and an empty object.
+ * If there is an error during the addition of the message, it passes the error to the next function in the cycle.
+ * @returns {Promise<any>} A promise that resolves with the response object or rejects with an error.
+ */
+export const AddNewMessageImageController = expressAsyncHandler(
+	async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+		try {
+			const { receiverId, image } = req.body;
+			const senderId = req.user?._id;
+
+			await AddNewMessageImageService(senderId, receiverId, image);
 
 			const socketReciver = await SocketModel.findOne({
 				userId: receiverId,

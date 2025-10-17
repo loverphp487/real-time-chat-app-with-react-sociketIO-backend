@@ -1,6 +1,7 @@
+import cloudinary from '@/lib/cloudinary';
 import MessageModel, { MessageDocument } from '@/models/message.model';
 import UserModel, { UserDocument } from '@/models/user.model';
-import { NotFoundException } from '@/utilis';
+import { BadRequestException, NotFoundException } from '@/utilis';
 import mongoose from 'mongoose';
 
 /**
@@ -131,6 +132,53 @@ export const AddNewMessageService = async (
 			senderId: senderId.toString(),
 			receiverId: receiverId.toString(),
 			message,
+		});
+
+		//commit transaction
+		await session.commitTransaction();
+
+		//end session
+		session.endSession();
+
+		return newMessage;
+	} catch (error) {
+		//rollback transaction
+		await session.abortTransaction();
+
+		//end session
+		session.endSession();
+
+		//throw error
+		throw error;
+	}
+};
+
+export const AddNewMessageImageService = async (
+	senderId: mongoose.Types.ObjectId,
+	receiverId: mongoose.Types.ObjectId,
+	image: string,
+) => {
+	const session = await mongoose.startSession();
+	try {
+		//start session transaction
+		session.startTransaction();
+
+		const checkUserExits = await UserModel.findOne({
+			_id: receiverId.toString(),
+		});
+
+		if (!checkUserExits) {
+			throw new NotFoundException('user Not  exits');
+		}
+
+		if (!image) throw new BadRequestException('image is required');
+
+		const uploadResponse = await cloudinary.uploader.upload(image);
+
+		const newMessage = await MessageModel.create({
+			senderId: senderId.toString(),
+			receiverId: receiverId.toString(),
+			image: uploadResponse.secure_url,
 		});
 
 		//commit transaction
