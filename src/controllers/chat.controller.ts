@@ -104,7 +104,7 @@ export const AddNewMessageImageController = expressAsyncHandler(
 			const user = await UserModel.findOne({ _id: receiverId });
 
 			const socketReciver = await SocketModel.findOne({
-				userId: receiverId,
+				userId: senderId,
 			});
 
 			if (socketReciver && req.io) {
