@@ -101,11 +101,11 @@ export const AddNewMessageImageController = expressAsyncHandler(
 
 			await AddNewMessageImageService(senderId, receiverId, image);
 
-			const user = await UserModel.findOne({ _id: receiverId });
-
 			const socketReciver = await SocketModel.findOne({
-				userId: senderId,
+				userId: receiverId,
 			});
+
+			const user = await UserModel.findOne({ _id: senderId });
 
 			if (socketReciver && req.io) {
 				req.io
