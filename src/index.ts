@@ -48,7 +48,7 @@ app.options(
 	}),
 );
 
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 /**
@@ -95,6 +95,8 @@ io.on('connection', async (socket) => {
 		socket.on('disconnect', async () => {
 			console.log(`A user ${socket?.user?.firstName} disconnected`);
 			await SocketModel.deleteOne({ userId: socket.userId });
+			socket.user = undefined;
+			socket.userId = undefined;
 		});
 	} else {
 		socket.disconnect();

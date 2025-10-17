@@ -1,5 +1,7 @@
 import { HttpConfig } from '@/config';
-import { getUserData } from '@/services/user.service';
+import cloudinary from '@/lib/cloudinary';
+import UserModel from '@/models/user.model';
+import { getUserData, updateProfilePicture } from '@/services/user.service';
 import { NextFunction, Request, Response } from 'express';
 import expressAsyncHandler from 'express-async-handler';
 
@@ -17,6 +19,29 @@ export const CurrentUserController = expressAsyncHandler(
 
 			res.status(HttpConfig.OK).json({
 				message: 'you are login successfully',
+				user,
+			});
+		} catch (error) {
+			next(error);
+		}
+	},
+);
+
+/**
+ * Handles a request to update a user's profile picture.
+ * It takes the request and response objects, and the next function in the application's request-response cycle.
+ * It retrieves the user's data from the request body and calls the updateProfilePicture function to update the user's profile picture.
+ * If the update is successful, it returns a response with a status code of 200 and the user's updated data.
+ * If there is an error during the update process, it passes the error to the next function in the cycle.
+ */
+export const UpdateUserProfileController = expressAsyncHandler(
+	async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+		try {
+			const { profilePic } = req.body;
+
+			const user = await updateProfilePicture(profilePic, req.user?._id);
+
+			res.status(HttpConfig.OK).json({
 				user,
 			});
 		} catch (error) {
